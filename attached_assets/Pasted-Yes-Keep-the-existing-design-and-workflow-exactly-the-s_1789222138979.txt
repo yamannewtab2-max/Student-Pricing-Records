@@ -1,0 +1,326 @@
+Yes. Keep the existing design and workflow exactly the same, and add the following functionality to the prompt:
+
+```text
+## DASHBOARD — PAYMENT TRACKING
+
+Keep the exact same visual style, typography, spacing, colors, buttons, borders, and overall minimal design from the existing application.
+
+When the user clicks/open a saved record from the Records page, open that record's Dashboard.
+
+The Dashboard is the main payment-tracking screen.
+
+Do NOT redesign the app.
+Do NOT add unnecessary sections.
+Keep it extremely clean and simple.
+
+---
+
+# DASHBOARD HEADER
+
+Show:
+
+[ Record name ]
+
+Below or beside it, show a simple search bar.
+
+Search students by:
+- Student number
+- Student name
+
+Add sorting/filter controls:
+
+- Low to high
+- High to low
+- Paid
+- Not paid
+
+The sorting should be based on the remaining amount.
+
+---
+
+# STUDENT PAYMENT LIST
+
+Display every student included in the record.
+
+Each student row should contain:
+
+Student name
+Level
+Remaining amount
+Payment status
+Payment button/input
+
+Example:
+
+Muhammad Ahmad
+Awwal
+1.500.000
+[ Not paid ]    [ + Payment ]
+
+Keep the row compact.
+
+Do not show parent names or phone numbers here.
+
+---
+
+# PAYMENT STATUS
+
+Every student starts as:
+
+Not paid
+
+Show a simple check mark when the student has completely paid.
+
+When the student has paid the FULL amount:
+
+✓ Paid
+
+Also apply a subtle greyed-out appearance to the student's name/row.
+
+Specifically:
+- Add a line-through effect to the student's name
+- Use a subtle grey filter/muted appearance
+- Keep the row readable
+- Do not make it disappear
+
+Example:
+
+~~Muhammad Ahmad~~    ✓ Paid
+
+The grey effect should make it immediately obvious that the student is finished.
+
+---
+
+# PARTIAL PAYMENTS
+
+Next to each student's payment information, add a simple button:
+
++ Payment
+
+When clicked, allow the user to enter the amount the student is paying now.
+
+For example:
+
+Original price:
+1.500.000
+
+Student pays:
+500.000
+
+Then automatically calculate:
+
+Remaining:
+1.000.000
+
+The amount paid must be added to the student's total payments.
+
+IMPORTANT:
+The system must NOT replace the original price.
+
+It must calculate:
+
+Remaining = Original Price - Total Amount Paid
+
+Example:
+
+Original: 1.500.000
+Payment 1: 500.000
+Remaining: 1.000.000
+
+Then:
+
+Payment 2: 300.000
+Total paid: 800.000
+Remaining: 700.000
+
+Then:
+
+Payment 3: 700.000
+Remaining: 0
+Status: ✓ Paid
+
+When remaining reaches 0:
+- Automatically mark the student as Paid
+- Show the check mark
+- Apply the grey/line-through style
+
+---
+
+# PAYMENT HISTORY
+
+Keep the interface minimal.
+
+When a student has made multiple payments, allow the user to see the payment history without making the main dashboard cluttered.
+
+For example, clicking the student's payment information can reveal:
+
+Paid:
+500.000
+300.000
+700.000
+
+Total paid:
+1.500.000
+
+Remaining:
+0
+
+Do not show this information by default if it makes the dashboard crowded.
+
+---
+
+# SEARCH
+
+The search bar should instantly filter the visible students.
+
+Search by:
+- Student number
+- Student name
+
+Example:
+
+Search:
+"17"
+
+→ Muhammad Abyan Syafiq
+
+Search:
+"Abdul"
+
+→ Abdul Karim
+
+---
+
+# SORTING / FILTERING
+
+Provide simple controls for:
+
+Low to high
+High to low
+Paid
+Not paid
+
+"Low to high" and "High to low" should sort by the REMAINING amount.
+
+Examples:
+
+Low → High:
+
+0
+200.000
+500.000
+1.000.000
+1.500.000
+
+High → Low:
+
+1.500.000
+1.000.000
+500.000
+200.000
+0
+
+"Paid" shows only fully paid students.
+
+"Not paid" shows students whose remaining amount is greater than 0.
+
+---
+
+# IMPORTANT PAYMENT LOGIC
+
+Every student must have:
+
+originalPrice
+totalPaid
+remainingAmount
+paymentStatus
+paymentHistory
+
+Calculate:
+
+remainingAmount = originalPrice - totalPaid
+
+Payment status:
+
+if remainingAmount <= 0:
+    Paid
+else:
+    Not paid
+
+Never allow the remaining amount to become negative.
+
+If a payment is greater than the remaining amount, either:
+- prevent the payment, or
+- clearly ask the user to enter a smaller amount.
+
+Do not silently create a negative balance.
+
+---
+
+# DASHBOARD LAYOUT
+
+Make the dashboard look approximately like:
+
+------------------------------------------------
+
+Record Name
+
+[ 🔍 Search students... ]
+
+[ Low to high ] [ High to low ] [ Paid ] [ Not paid ]
+
+------------------------------------------------
+
+Abdul Karim
+Tsaniy
+1.500.000 remaining          + Payment
+
+Atir Abdul Halim
+Tsaniy
+500.000 remaining             + Payment
+
+~~Muhammad Izzul Fadli~~
+Tsaniy
+0 remaining                   ✓ Paid
+
+------------------------------------------------
+
+Keep the exact same minimal visual language as the rest of the app.
+
+---
+
+# UX PRIORITY
+
+The user should be able to understand the dashboard instantly.
+
+The main actions are only:
+
+Search
+Sort/filter
+See who paid
+See who hasn't paid
+Add payment
+See remaining amount
+
+Do NOT add:
+- complicated accounting terminology
+- unnecessary charts
+- excessive statistics
+- unnecessary navigation
+- large descriptions
+- complicated menus
+
+Keep it extremely clean.
+
+The complete user flow should now be:
+
+Records
+→ Open record
+→ Payment Dashboard
+→ Search / Filter
+→ Add payment
+→ Automatically calculate remaining
+→ Automatically mark Paid when remaining = 0
+
+Everything must remain consistent with the existing design.
+```
