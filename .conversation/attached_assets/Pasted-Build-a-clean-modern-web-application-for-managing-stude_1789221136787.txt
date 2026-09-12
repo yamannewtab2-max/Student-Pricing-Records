@@ -1,0 +1,318 @@
+Build a clean, modern web application for managing student records and assigning prices to students.
+
+The app must be EXTREMELY SIMPLE and minimal. The user should understand what to do immediately without reading long explanations.
+
+Do NOT use popups/modals for the workflow. Every step should be a full-page screen.
+
+## DESIGN
+
+Create a premium, polished, minimal interface.
+
+Style:
+- Very clean and spacious
+- Modern SaaS-style UI
+- White/light background
+- Subtle borders
+- Soft shadows
+- Rounded corners
+- Elegant typography
+- Excellent spacing
+- Responsive on desktop, tablet, and mobile
+- Subtle animations and transitions
+- Professional but not complicated
+
+IMPORTANT:
+Use as few words as possible.
+Do not add unnecessary descriptions, paragraphs, statistics, cards, or features.
+Buttons should have short labels such as:
+- Create record
+- Next
+- Back
+- Save
+
+The interface should be visually obvious rather than text-heavy.
+
+---
+
+# PAGE 1 — RECORDS
+
+This is the start page.
+
+Show a simple list of existing records.
+
+At the top/right, have a prominent "+" button.
+
+The + button should mean:
+"Create new record"
+
+If there are no records yet, show a very simple empty state with:
+"+" / "Create record"
+
+Do not add unnecessary explanations.
+
+---
+
+# PAGE 2 — CREATE RECORD
+
+When the user clicks +, navigate to a full page.
+
+Title:
+"New record"
+
+Show one input:
+
+Record name
+
+Example placeholder:
+"September 2026"
+
+Then a button:
+"Next"
+
+Also include a small "Back" button.
+
+---
+
+# PAGE 3 — SELECT STUDENTS
+
+Title:
+"Students"
+
+Give the user two choices:
+
+[ All students ]
+
+[ Custom students ]
+
+### ALL STUDENTS
+
+If the user selects "All students", all students are selected automatically.
+
+Then show:
+"30 students selected"
+
+And a:
+"Next" button.
+
+### CUSTOM STUDENTS
+
+If the user selects "Custom students", show a search bar.
+
+Search must work by:
+- Student number
+- Student name
+
+Below the search bar, display the student list.
+
+Each student should have a checkbox.
+
+The user can select individual students.
+
+Show the number selected, for example:
+"8 selected"
+
+Then:
+"Next"
+
+Keep this page very clean.
+
+---
+
+# PAGE 4 — PRICE
+
+Title:
+"Price"
+
+Show the default price prominently:
+
+1,500,000
+
+Allow the user to choose:
+
+[ Apply to all ]
+
+[ Custom ]
+
+The default price is:
+
+1,500,000
+
+Use proper Indonesian-style number formatting:
+1.500.000
+
+The user should be able to edit the default price.
+
+### APPLY TO ALL
+
+If "Apply to all" is selected:
+
+Show one price input containing:
+
+1.500.000
+
+This same price will be assigned to every selected student.
+
+Then:
+
+"Next"
+
+### CUSTOM
+
+If "Custom" is selected:
+
+Navigate to a clean full-page student pricing table.
+
+Display ONLY the important information:
+
+| Student | Level | Price |
+
+Each row contains:
+- Student name
+- Level
+- Editable price input
+
+Example:
+
+Abdul Karim | Tsaniy | [ 1.500.000 ]
+
+The price input must be easy to edit.
+
+Every selected student must appear in this list.
+
+Then show:
+
+"Next"
+
+---
+
+# PAGE 5 — REVIEW
+
+Before saving, show a very clean review page.
+
+Title:
+"Review"
+
+Show:
+
+Record name
+Number of students
+Total amount
+
+Then show the selected students and their assigned prices.
+
+Keep the layout compact and readable.
+
+Buttons:
+
+"Back"
+
+"Save record"
+
+When "Save record" is clicked, save the record and return to the Records page.
+
+---
+
+# IMPORTANT DATA BEHAVIOR
+
+The application must actually function, not just look like a mockup.
+
+Implement:
+- Creating records
+- Naming records
+- Selecting all students
+- Selecting individual students
+- Searching students by number or name
+- Setting a default price
+- Applying one price to all selected students
+- Setting individual prices
+- Reviewing the record
+- Saving records
+- Displaying saved records on the start page
+- Editing saved records if possible
+
+Use local storage or an appropriate simple database so records remain after refreshing the page.
+
+---
+
+# STUDENT DATA
+
+Preload the following 30 students into the application.
+
+Use the number as the student's ID/search number.
+
+1. Abdul Karim — Tsaniy — Parent: Nur Imamah — Phone: 62 857-0614-8175
+2. Atir Abdul Halim — Tsaniy — Parent: M. Syaiful Rahman — Phone: 0823-3600-4405
+3. Muhammad Izzul Fadli — Tsaniy — Parent: Abdul Mannan — Phone: 0877-6408-3464
+4. Muhammad Amin — Tsaniy — Parent: Amin Sholeh — Phone: 0882-9069-0773
+5. Muhammad Ihsanuddin Luthfi — Tsaniy — Parent: Kamil Supardi — Phone: 62 838-1711-0434
+6. Muhammad Ismail Utsman Zain — Tsaniy — Parent: Vigo Prasminto — Phone: 62 852-0350-9208
+7. Muhammad Nur Saif — Tsaniy — Parent: Saiful Rahman — Phone: 62 819-0818-1326
+8. Zaki Khasanul Arfan — Tsaniy — Parent: Muhamad Duki — Phone: 0823-3772-8536
+9. Zulfiqor Baehaqi — Tsaniy — Parent: Oon Burhan — Phone: 0882-3143-0846
+10. Ahsin Kama Ahsanallah — Awwal — Parent: IMAN HERDANSAH — Phone: 0812-1190-165
+11. Ali Zainal Abidin Iskandar — Awwal — Parent: Muhammad Ulil Abshor — Phone: 62 858-6316-6043
+12. Hamid — Awwal — Parent: Fayrah Athirah — Phone: 0851-7334-2219
+13. Jovansyah Raiza Al Jabbar Damario — Awwal — Parent: Farida Soewarto — Phone: 62 896-4989-8080
+14. Kenzo Bintang Atarahman Damario — Awwal — Parent: Farida Soewarto — Phone: 62 896-4989-8080
+15. Mohammad Al Azzamul Kheir — Awwal — Parent: Dr. H. Albert — Phone: 0852-6590-7210
+16. Muhamad Najih Husein — Awwal — Parent: H. Aang M Nagib — Phone: 62 857-7729-9966
+17. Muhammad Abyan Syafiq — Awwal — Parent: Yadi Supriyadi — Phone: 0857-9703-4983
+18. Muhammad Aufa Rakha Akbar — Awwal — Parent: Muhammad Taufan Aulia Akbar — Phone: 0822-6863-3457
+19. Muhammad Azmi Mubarok — Awwal — Parent: Hery Setyawan — Phone: 0877-8235-8998
+20. Muhammad Ibnu Hibban — Awwal — Parent: KH. Ahmad Maksudi — Phone: 0855-9153-6049
+21. Muhammad Kholil — Awwal — Parent: Aspari — Phone: 0831-9074-0184
+22. Muhammad Syamsul Arsyad — Awwal — Parent: Yun Efika Budi — Phone: 0812-9327-399
+23. Muhammad Umair Al Ghozi — Awwal — Parent: TB Dedi Safruddin — Phone: 0812-1015-1490
+24. Muhammad Yuusuf Abdurrahman — Awwal — Parent: Muhammad Arif Billah — Phone: 0812-8748-0254
+25. Muhammad Ziyadatul Khoir — Awwal — Parent: Rahmat — Phone: 0812-9920-907
+26. Zaim Ahmad Wafy — Awwal — Parent: Purwo Sugiyanto — Phone: 0852-8323-2785
+27. Zanki Hamizan Radlan — Awwal — Parent: Yockie Marlan — Phone: 0858-8340-1644
+28. Zayan Shadra Avasa — Awwal — Parent: Rovalwa Jutama — Phone: 62 813-1058-5357
+29. Muhammad Usamah — Awwal — Parent: Danang Kuncoro Wicaksosno — Phone: 0895-2477-9349
+30. Muhammad 'Atiqur Rohman — Awwal — Parent: Muhammad Iqbal — Phone: 0821-7360-6830
+
+---
+
+# IMPORTANT UI RULES
+
+Do not display parent names or phone numbers during the normal price-selection workflow unless needed.
+
+The main student-selection and pricing screens should focus on:
+
+Student number
+Student name
+Level
+Price
+
+The search bar should search:
+- Student number
+- Student name
+
+Use checkboxes for student selection.
+
+Use a sticky bottom navigation/action area for:
+Back | Next
+
+Make the "Next" button visually obvious.
+
+Prevent moving to the next step if no students are selected.
+
+Make price inputs numeric and automatically format values with Indonesian thousands separators.
+
+Example:
+1500000 → 1.500.000
+
+Do not make the application feel like an accounting system with complicated menus.
+
+The entire experience should feel like:
+
+Create record
+→ Name
+→ Students
+→ Price
+→ Review
+→ Save
+
+That's it.
+
+Focus on UX, simplicity, speed, and visual polish.
