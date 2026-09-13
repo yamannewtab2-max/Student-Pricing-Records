@@ -8,10 +8,11 @@ import { Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
 import { ArrowLeft, ArrowRight, Check, ChevronDown, ChevronUp, CircleCheck, CirclePlus, FileText, Languages, Pencil, Search, Settings, WalletCards, X } from 'lucide-react';
 
 type Student = { id: string; name: string; level: string };
-type PriceItem = Student & { price: number; originalPrice?: number; totalPaid?: number; paymentHistory?: number[] };
+type PaymentEntry = { amount: number; date: string };
+type PriceItem = Student & { price: number; originalPrice?: number; totalPaid?: number; paymentHistory?: Array<PaymentEntry | number> };
 type RecordItem = { id: string; name: string; createdAt: string; students: PriceItem[] };
 type Step = 'name' | 'students' | 'pricing' | 'review';
-type PaymentRow = PriceItem & { originalPrice: number; totalPaid: number; paymentHistory: number[]; remainingAmount: number; isPaid: boolean };
+type PaymentRow = PriceItem & { originalPrice: number; totalPaid: number; paymentHistory: PaymentEntry[]; remainingAmount: number; isPaid: boolean };
 
 const students: Student[] = [
   { id: 'STD-24001', name: 'Alya Putri Ramadhani', level: 'Tsaniy' },
@@ -60,7 +61,7 @@ const translations: Record<Language, Record<string, string>> = {
     back: 'Kembali', backToRecords: 'Kembali ke catatan', paymentDashboard: 'Dashboard pembayaran', searchStudent: 'Cari nomor atau nama siswa',
     filter: 'Filter', lowToHigh: 'Rendah → tinggi', highToLow: 'Tinggi → rendah', paid: 'Sudah bayar', unpaid: 'Belum bayar', remaining: 'Sisa',
     payment: 'Pembayaran', payAll: 'Bayar semua', confirm: 'Konfirmasi', confirmPayRemaining: 'Bayar seluruh sisa pembayaran?',
-    paidStatus: 'Sudah bayar', history: 'Riwayat', paymentTotal: 'Pembayaran', paymentNumber: 'Pembayaran', noStudents: 'Siswa tidak ditemukan.',
+    paidStatus: 'Sudah bayar', history: 'Riwayat', paymentTotal: 'Pembayaran', paymentNumber: 'Pembayaran', date: 'Tanggal', noStudents: 'Siswa tidak ditemukan.',
     amountRequired: 'Masukkan jumlah pembayaran.', maxAmount: 'Maksimal', cancel: 'Batal', save: 'Simpan',
     settingsDescription: 'Atur bahasa yang digunakan di aplikasi.', language: 'Bahasa', chooseLanguage: 'Pilih bahasa tampilan',
     indonesian: 'Bahasa Indonesia', english: 'English', languageSaved: 'Perubahan bahasa tersimpan otomatis.',
@@ -82,7 +83,7 @@ const translations: Record<Language, Record<string, string>> = {
     back: 'Back', backToRecords: 'Back to records', paymentDashboard: 'Payment dashboard', searchStudent: 'Search student number or name',
     filter: 'Filter', lowToHigh: 'Low → high', highToLow: 'High → low', paid: 'Paid', unpaid: 'Not paid', remaining: 'Remaining',
     payment: 'Payment', payAll: 'Pay all', confirm: 'Confirm', confirmPayRemaining: 'Pay the full remaining balance?',
-    paidStatus: 'Paid', history: 'History', paymentTotal: 'Payments', paymentNumber: 'Payment', noStudents: 'No students found.',
+    paidStatus: 'Paid', history: 'History', paymentTotal: 'Payments', paymentNumber: 'Payment', date: 'Date', noStudents: 'No students found.',
     amountRequired: 'Enter a payment amount.', maxAmount: 'Maximum', cancel: 'Cancel', save: 'Save',
     settingsDescription: 'Choose the language used in the app.', language: 'Language', chooseLanguage: 'Choose display language',
     indonesian: 'Bahasa Indonesia', english: 'English', languageSaved: 'Language changes are saved automatically.',
@@ -110,10 +111,16 @@ function useLanguage() {
   if (!context) throw new Error('useLanguage must be used within LanguageProvider');
   return context;
 }
+const normalizePaymentHistory = (history?: Array<PaymentEntry | number>): PaymentEntry[] => (history || []).map((entry) => typeof entry === 'number' ? { amount: entry, date: '' } : entry);
+const formatPaymentDate = (date: string, language: Language) => {
+  if (!date) return '—';
+  const parsed = new Date(date);
+  return Number.isNaN(parsed.getTime()) ? '—' : new Intl.DateTimeFormat(language === 'en' ? 'en-US' : 'id-ID', { day: '2-digit', month: 'short', year: 'numeric' }).format(parsed);
+};
 const getPaymentRow = (student: PriceItem): PaymentRow => {
   const originalPrice = student.originalPrice ?? student.price;
-  const paymentHistory = student.paymentHistory ?? [];
-  const totalPaid = student.totalPaid ?? paymentHistory.reduce((sum, amount) => sum + amount, 0);
+  const paymentHistory = normalizePaymentHistory(student.paymentHistory);
+  const totalPaid = student.totalPaid ?? paymentHistory.reduce((sum, payment) => sum + payment.amount, 0);
   const remainingAmount = Math.max(0, originalPrice - totalPaid);
   return { ...student, originalPrice, totalPaid, paymentHistory, remainingAmount, isPaid: remainingAmount === 0 };
 };
@@ -182,7 +189,7 @@ function StepLayout({ step, children, footer }: { step: Step; children: ReactNod
 
 function PaymentDashboard({ recordId }: { recordId: string }) {
   const [, setLocation] = useLocation();
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const [record, setRecord] = useState<RecordItem | undefined>(() => readRecords().find((item) => item.id === recordId));
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<'low' | 'high' | 'paid' | 'unpaid'>('low');
@@ -213,7 +220,7 @@ function PaymentDashboard({ recordId }: { recordId: string }) {
     const current = getPaymentRow(student);
     if (!amount) { setPaymentError('Masukkan jumlah pembayaran.'); return; }
     if (amount > current.remainingAmount) { setPaymentError(`Maksimal ${currency(current.remainingAmount)}.`); return; }
-    updateRecord(record.students.map((item) => item.id === studentId ? { ...item, originalPrice: current.originalPrice, totalPaid: current.totalPaid + amount, paymentHistory: [...current.paymentHistory, amount] } : item));
+    updateRecord(record.students.map((item) => item.id === studentId ? { ...item, originalPrice: current.originalPrice, totalPaid: current.totalPaid + amount, paymentHistory: [...current.paymentHistory, { amount, date: new Date().toISOString() }] } : item));
     setPaymentId(undefined);
     setPaymentValue('');
     setPaymentError('');
@@ -223,7 +230,7 @@ function PaymentDashboard({ recordId }: { recordId: string }) {
     if (!student) return;
     const current = getPaymentRow(student);
     if (!current.remainingAmount) return;
-    updateRecord(record.students.map((item) => item.id === studentId ? { ...item, originalPrice: current.originalPrice, totalPaid: current.totalPaid + current.remainingAmount, paymentHistory: [...current.paymentHistory, current.remainingAmount] } : item));
+    updateRecord(record.students.map((item) => item.id === studentId ? { ...item, originalPrice: current.originalPrice, totalPaid: current.totalPaid + current.remainingAmount, paymentHistory: [...current.paymentHistory, { amount: current.remainingAmount, date: new Date().toISOString() }] } : item));
     setConfirmAllId(undefined);
   };
 
@@ -242,7 +249,7 @@ function PaymentDashboard({ recordId }: { recordId: string }) {
         </div>
          {confirmAllId === student.id && !student.isPaid && <p data-testid={`text-confirm-pay-all-${student.id}`} className="mt-3 rounded-lg bg-secondary px-3 py-2 text-xs font-semibold text-muted-foreground">{t('confirmPayRemaining')} · {currency(student.remainingAmount)}</p>}
          {paymentId === student.id && <div className="mt-4 rounded-xl bg-muted p-3"><div className="flex flex-col gap-2 sm:flex-row sm:items-center"><label className="relative flex-1"><span className="absolute left-3 top-2.5 text-xs font-bold text-muted-foreground">Rp</span><input autoFocus data-testid={`input-payment-${student.id}`} inputMode="numeric" value={paymentValue ? new Intl.NumberFormat('id-ID').format(Number(paymentValue)) : ''} onChange={(e) => { setPaymentValue(e.target.value.replace(/\D/g, '')); setPaymentError(''); }} placeholder={t('payment')} className="focus-ring h-10 w-full rounded-lg border border-border bg-card pl-9 pr-3 text-right text-sm font-bold outline-none focus:border-primary" /></label><div className="flex gap-2"><button data-testid={`button-cancel-payment-${student.id}`} onClick={() => { setPaymentId(undefined); setPaymentError(''); }} className="focus-ring min-h-10 rounded-lg px-3 text-xs font-bold text-muted-foreground hover:bg-card">{t('cancel')}</button><button data-testid={`button-save-payment-${student.id}`} onClick={() => addPayment(student.id)} className="focus-ring min-h-10 rounded-lg bg-primary px-3 text-xs font-bold text-primary-foreground">{t('save')}</button></div></div>{paymentError && <p data-testid={`text-payment-error-${student.id}`} className="mt-2 text-xs font-semibold text-destructive">{paymentError}</p>}</div>}
-         {expandedId === student.id && <div data-testid={`payment-history-${student.id}`} className="mt-4 rounded-xl border border-border bg-background px-4 py-3"><div className="flex items-center justify-between text-xs"><span className="font-bold text-muted-foreground">{t('paymentTotal')}</span><span className="font-bold">{currency(student.totalPaid)}</span></div><div className="mt-2 space-y-1">{student.paymentHistory.map((amount, index) => <div key={`${student.id}-${index}`} className="flex justify-between text-xs text-muted-foreground"><span>{t('paymentNumber')} {index + 1}</span><span>{currency(amount)}</span></div>)}</div><div className="mt-3 flex items-center justify-between border-t border-border pt-2 text-xs"><span className="font-bold text-muted-foreground">{t('remaining')}</span><span className="font-bold text-primary">{currency(student.remainingAmount)}</span></div></div>}
+          {expandedId === student.id && <div data-testid={`payment-history-${student.id}`} className="mt-4 rounded-xl border border-border bg-background px-4 py-3"><div className="flex items-center justify-between text-xs"><span className="font-bold text-muted-foreground">{t('paymentTotal')}</span><span className="font-bold">{currency(student.totalPaid)}</span></div><div className="mt-2 space-y-2">{normalizePaymentHistory(student.paymentHistory).map((payment, index) => <div key={`${student.id}-${index}`} className="flex items-center justify-between gap-3 text-xs text-muted-foreground"><span>{t('paymentNumber')} {index + 1}<span className="ml-2 text-[10px]">{t('date')}: {formatPaymentDate(payment.date, language)}</span></span><span className="shrink-0">{currency(payment.amount)}</span></div>)}</div><div className="mt-3 flex items-center justify-between border-t border-border pt-2 text-xs"><span className="font-bold text-muted-foreground">{t('remaining')}</span><span className="font-bold text-primary">{currency(student.remainingAmount)}</span></div></div>}
        </div>) : <div className="px-5 py-14 text-center text-sm text-muted-foreground">{t('noStudents')}</div>}
     </div>
   </section></Shell>;
@@ -305,7 +312,7 @@ function Flow({ editingId, startAt }: { editingId?: string; startAt?: Step }) {
   const [, setLocation] = useLocation(); const [records, setRecords] = useState<RecordItem[]>(readRecords); const existing = editingId ? records.find((r) => r.id === editingId) : undefined;
   const [step, setStep] = useState<Step>(startAt || (editingId ? 'students' : 'name')); const [name, setName] = useState(existing?.name || ''); const [selected, setSelected] = useState<string[]>(existing?.students.map((s) => s.id) || []); const [items, setItems] = useState<PriceItem[]>(existing?.students || []);
   const chosen = students.filter((s) => selected.includes(s.id));
-  const save = () => { const next: RecordItem = { id: editingId || `record-${Date.now()}`, name, createdAt: existing?.createdAt || new Date().toISOString(), students: items.map((student) => ({ ...student, originalPrice: student.price, totalPaid: student.totalPaid ?? 0, paymentHistory: student.paymentHistory ?? [] })) }; const all = editingId ? records.map((r) => r.id === editingId ? next : r) : [next, ...records]; saveRecords(all); setRecords(all); setLocation('/'); };
+  const save = () => { const next: RecordItem = { id: editingId || `record-${Date.now()}`, name, createdAt: existing?.createdAt || new Date().toISOString(), students: items.map((student) => ({ ...student, originalPrice: student.price, totalPaid: student.totalPaid ?? 0, paymentHistory: normalizePaymentHistory(student.paymentHistory) })) }; const all = editingId ? records.map((r) => r.id === editingId ? next : r) : [next, ...records]; saveRecords(all); setRecords(all); setLocation('/'); };
   if (step === 'name') return <NameStep initial={name} onNext={(value) => { setName(value); setStep('students'); }} />;
   if (step === 'students') return <StudentsStep selected={selected} onBack={() => setStep('name')} onNext={(ids) => { setSelected(ids); setItems(ids.map((id) => items.find((i) => i.id === id) || students.find((s) => s.id === id)! as PriceItem)); setStep('pricing'); }} />;
   if (step === 'pricing') return <PricingStep chosen={chosen} initial={items} onBack={() => setStep('students')} onNext={(next) => { setItems(next); setStep('review'); }} />;
