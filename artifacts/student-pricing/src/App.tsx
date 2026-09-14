@@ -5,9 +5,9 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import { Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
-import { ArrowLeft, ArrowRight, Check, ChevronDown, ChevronUp, CircleCheck, CirclePlus, FileText, Languages, Pencil, Search, Settings, WalletCards, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, ChevronDown, ChevronUp, CircleCheck, CirclePlus, FileText, Languages, MessageCircle, Pencil, Search, Settings, WalletCards, X } from 'lucide-react';
 
-type Student = { id: string; name: string; level: string };
+type Student = { id: string; name: string; phone: string; level: string };
 type PaymentEntry = { amount: number; date: string };
 type PriceItem = Student & { price: number; originalPrice?: number; totalPaid?: number; paymentHistory?: Array<PaymentEntry | number> };
 type RecordItem = { id: string; name: string; createdAt: string; students: PriceItem[] };
@@ -15,40 +15,50 @@ type Step = 'name' | 'students' | 'pricing' | 'review';
 type PaymentRow = PriceItem & { originalPrice: number; totalPaid: number; paymentHistory: PaymentEntry[]; remainingAmount: number; isPaid: boolean };
 
 const students: Student[] = [
-  { id: 'STD-24001', name: 'Alya Putri Ramadhani', level: 'Tsaniy' },
-  { id: 'STD-24002', name: 'Bima Aditya Pratama', level: 'Tsaniy' },
-  { id: 'STD-24003', name: 'Citra Maharani', level: 'Tsaniy' },
-  { id: 'STD-24004', name: 'Daffa Rizky Saputra', level: 'Tsaniy' },
-  { id: 'STD-24005', name: 'Elena Salsabila', level: 'Tsaniy' },
-  { id: 'STD-24006', name: 'Farhan Maulana', level: 'Tsaniy' },
-  { id: 'STD-24007', name: 'Gita Nur Aini', level: 'Tsaniy' },
-  { id: 'STD-24008', name: 'Hafiz Ramadhan', level: 'Tsaniy' },
-  { id: 'STD-24009', name: 'Intan Permata Sari', level: 'Tsaniy' },
-  { id: 'STD-24010', name: 'Jovan Kurniawan', level: 'Awwal' },
-  { id: 'STD-24011', name: 'Kania Rahmawati', level: 'Awwal' },
-  { id: 'STD-24012', name: 'Luthfi Haryanto', level: 'Awwal' },
-  { id: 'STD-24013', name: 'Maya Sekar Arum', level: 'Awwal' },
-  { id: 'STD-24014', name: 'Naufal Fadillah', level: 'Awwal' },
-  { id: 'STD-24015', name: 'Olivia Cahyani', level: 'Awwal' },
-  { id: 'STD-24016', name: 'Pandu Wiratama', level: 'Awwal' },
-  { id: 'STD-24017', name: 'Qonita Azzahra', level: 'Awwal' },
-  { id: 'STD-24018', name: 'Raka Bagaskara', level: 'Awwal' },
-  { id: 'STD-24019', name: 'Salma Nabila', level: 'Awwal' },
-  { id: 'STD-24020', name: 'Tegar Prakoso', level: 'Awwal' },
-  { id: 'STD-24021', name: 'Ulya Khairunnisa', level: 'Awwal' },
-  { id: 'STD-24022', name: 'Vino Alfarizi', level: 'Awwal' },
-  { id: 'STD-24023', name: 'Wahyu Firmansyah', level: 'Awwal' },
-  { id: 'STD-24024', name: 'Xaviera Anindita', level: 'Awwal' },
-  { id: 'STD-24025', name: 'Yusuf Alamsyah', level: 'Awwal' },
-  { id: 'STD-24026', name: 'Zahra Fatin', level: 'Awwal' },
-  { id: 'STD-24027', name: 'Arga Pranata', level: 'Awwal' },
-  { id: 'STD-24028', name: 'Bella Oktaviani', level: 'Awwal' },
-  { id: 'STD-24029', name: 'Dimas Setiawan', level: 'Awwal' },
-  { id: 'STD-24030', name: 'Nadine Larasati', level: 'Awwal' },
+  { id: 'STD-26001', name: 'Abdul Karim Lamongan', phone: '62 857-0614-8175', level: 'Tsaniy' },
+  { id: 'STD-26002', name: 'Abdul Halim', phone: '0823-3600-4405', level: 'Tsaniy' },
+  { id: 'STD-26003', name: 'Muhammad Izzul Fadli', phone: '0877-6408-3464', level: 'Tsaniy' },
+  { id: 'STD-26004', name: 'Muhammad Amin', phone: '0882-9069-0773', level: 'Tsaniy' },
+  { id: 'STD-26005', name: 'Muhammad Ihsanuddin Luthfi', phone: '62 838-1711-0434', level: 'Tsaniy' },
+  { id: 'STD-26006', name: 'Muhammad Ismail Utsman Zain', phone: '62 852-0350-9208', level: 'Tsaniy' },
+  { id: 'STD-26007', name: 'Muhammad Nur Saif', phone: '62 819-0818-1326', level: 'Tsaniy' },
+  { id: 'STD-26008', name: 'Zaki Khasanul Arfan', phone: '0823-3772-8536', level: 'Tsaniy' },
+  { id: 'STD-26009', name: 'Zulfiqor Baehaqi', phone: '0882-3143-0846', level: 'Tsaniy' },
+  { id: 'STD-26010', name: 'Ahsin Kama', phone: '0812-1190-165', level: 'Awwal' },
+  { id: 'STD-26011', name: 'Ali Zainal Abidin Iskandar', phone: '62 858-6316-6043', level: 'Awwal' },
+  { id: 'STD-26012', name: 'Hamid', phone: '0851-7334-2219', level: 'Awwal' },
+  { id: 'STD-26013', name: 'Jovansyah Raiza Al Jabbar Damario', phone: '62 896-4989-8080', level: 'Awwal' },
+  { id: 'STD-26014', name: 'Kenzo Bintang Atarahman Damario', phone: '62 896-4989-8080', level: 'Awwal' },
+  { id: 'STD-26015', name: 'Mohammad Al Azzamul Kheir', phone: '0852-6590-7210', level: 'Awwal' },
+  { id: 'STD-26016', name: 'Muhamad Najih Husein', phone: '62 857-7729-9966', level: 'Awwal' },
+  { id: 'STD-26017', name: 'Muhammad Abyan Syafiq', phone: '0857-9703-4983', level: 'Awwal' },
+  { id: 'STD-26018', name: 'Muhammad Aufa Rakha Akbar', phone: '0822-6863-3457', level: 'Awwal' },
+  { id: 'STD-26019', name: 'Muhammad Azmi Mubarok', phone: '0877-8235-8998', level: 'Awwal' },
+  { id: 'STD-26020', name: 'Muhammad Ibnu Hibban', phone: '0855-9153-6049', level: 'Awwal' },
+  { id: 'STD-26021', name: 'Muhammad Kholil', phone: '0831-9074-0184', level: 'Awwal' },
+  { id: 'STD-26022', name: 'Muhammad Syamsul Arsyad', phone: '0812-9327-399', level: 'Awwal' },
+  { id: 'STD-26023', name: 'Muhammad Umair Al Ghozi', phone: '0812-1015-1490', level: 'Awwal' },
+  { id: 'STD-26024', name: 'Muhammad Yuusuf Abdurrahman', phone: '0812-8748-0254', level: 'Awwal' },
+  { id: 'STD-26025', name: 'Muhammad Ziyadatul Khoir', phone: '0812-9920-907', level: 'Awwal' },
+  { id: 'STD-26026', name: 'Zaim Ahmad Wafy', phone: '0852-8323-2785', level: 'Awwal' },
+  { id: 'STD-26027', name: 'Zanki Hamizan Radlan', phone: '0858-8340-1644', level: 'Awwal' },
+  { id: 'STD-26028', name: 'Zayan Shadra Avasa', phone: '62 813-1058-5357', level: 'Awwal' },
+  { id: 'STD-26029', name: 'Muhammad Usamah', phone: '0895-2477-9349', level: 'Awwal' },
+  { id: 'STD-26030', name: "Muhammad 'Atiqur Rohman", phone: '0821-7360-6830', level: 'Awwal' },
 ];
 
 const currency = (value: number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(value);
-const readRecords = (): RecordItem[] => { try { return JSON.parse(localStorage.getItem('student-pricing-records') || '[]'); } catch { return []; } };
+const rosterVersion = 'students-26001-26030';
+const readRecords = (): RecordItem[] => {
+  try {
+    if (localStorage.getItem('student-pricing-roster-version') !== rosterVersion) {
+      localStorage.removeItem('student-pricing-records');
+      localStorage.setItem('student-pricing-roster-version', rosterVersion);
+      return [];
+    }
+    return JSON.parse(localStorage.getItem('student-pricing-records') || '[]');
+  } catch { return []; }
+};
 const saveRecords = (items: RecordItem[]) => localStorage.setItem('student-pricing-records', JSON.stringify(items));
 type Language = 'id' | 'en';
 const languageKey = 'student-pricing-language';
@@ -60,7 +70,7 @@ const translations: Record<Language, Record<string, string>> = {
     createFirstRecord: 'Buat catatan pertama', record: 'Catatan', students: 'Siswa', total: 'Total', edit: 'Edit', delete: 'Hapus',
     back: 'Kembali', backToRecords: 'Kembali ke catatan', paymentDashboard: 'Dashboard pembayaran', searchStudent: 'Cari nomor atau nama siswa',
     filter: 'Filter', lowToHigh: 'Rendah → tinggi', highToLow: 'Tinggi → rendah', paid: 'Sudah bayar', unpaid: 'Belum bayar', remaining: 'Sisa',
-    payment: 'Pembayaran', payAll: 'Bayar semua', confirm: 'Konfirmasi', confirmPayRemaining: 'Bayar seluruh sisa pembayaran?',
+    payment: 'Pembayaran', payAll: 'Bayar semua', confirm: 'Konfirmasi', confirmPayRemaining: 'Bayar seluruh sisa pembayaran?', whatsapp: 'WhatsApp',
     paidStatus: 'Sudah bayar', history: 'Riwayat', paymentTotal: 'Pembayaran', paymentNumber: 'Pembayaran', date: 'Tanggal', noStudents: 'Siswa tidak ditemukan.',
     amountRequired: 'Masukkan jumlah pembayaran.', maxAmount: 'Maksimal', cancel: 'Batal', save: 'Simpan',
     settingsDescription: 'Atur bahasa yang digunakan di aplikasi.', language: 'Bahasa', chooseLanguage: 'Pilih bahasa tampilan',
@@ -82,7 +92,7 @@ const translations: Record<Language, Record<string, string>> = {
     createFirstRecord: 'Create your first record', record: 'Record', students: 'Students', total: 'Total', edit: 'Edit', delete: 'Delete',
     back: 'Back', backToRecords: 'Back to records', paymentDashboard: 'Payment dashboard', searchStudent: 'Search student number or name',
     filter: 'Filter', lowToHigh: 'Low → high', highToLow: 'High → low', paid: 'Paid', unpaid: 'Not paid', remaining: 'Remaining',
-    payment: 'Payment', payAll: 'Pay all', confirm: 'Confirm', confirmPayRemaining: 'Pay the full remaining balance?',
+    payment: 'Payment', payAll: 'Pay all', confirm: 'Confirm', confirmPayRemaining: 'Pay the full remaining balance?', whatsapp: 'WhatsApp',
     paidStatus: 'Paid', history: 'History', paymentTotal: 'Payments', paymentNumber: 'Payment', date: 'Date', noStudents: 'No students found.',
     amountRequired: 'Enter a payment amount.', maxAmount: 'Maximum', cancel: 'Cancel', save: 'Save',
     settingsDescription: 'Choose the language used in the app.', language: 'Language', chooseLanguage: 'Choose display language',
@@ -112,6 +122,10 @@ function useLanguage() {
   return context;
 }
 const normalizePaymentHistory = (history?: Array<PaymentEntry | number>): PaymentEntry[] => (history || []).map((entry) => typeof entry === 'number' ? { amount: entry, date: '' } : entry);
+const whatsappNumber = (phone: string) => {
+  const digits = phone.replace(/\D/g, '');
+  return digits.startsWith('0') ? `62${digits.slice(1)}` : digits;
+};
 const formatPaymentDate = (date: string, language: Language) => {
   if (!date) return '—';
   const parsed = new Date(date);
@@ -124,6 +138,11 @@ const getPaymentRow = (student: PriceItem): PaymentRow => {
   const remainingAmount = Math.max(0, originalPrice - totalPaid);
   return { ...student, originalPrice, totalPaid, paymentHistory, remainingAmount, isPaid: remainingAmount === 0 };
 };
+
+function WhatsAppLink({ studentId, studentName, phone }: { studentId: string; studentName: string; phone: string }) {
+  const { t } = useLanguage();
+  return <a data-testid={`link-whatsapp-${studentId}`} href={`https://wa.me/${whatsappNumber(phone)}`} target="_blank" rel="noreferrer" onClick={(event) => event.stopPropagation()} aria-label={`${t('whatsapp')} ${studentName}`} title={`${t('whatsapp')} ${studentName}`} className="focus-ring inline-flex size-8 shrink-0 items-center justify-center rounded-lg text-[#25D366] transition hover:bg-[#25D366]/10"><MessageCircle size={16} /></a>;
+}
 
 function Shell({ children }: { children: ReactNode }) {
   const [, setLocation] = useLocation();
@@ -200,7 +219,7 @@ function PaymentDashboard({ recordId }: { recordId: string }) {
   const [expandedId, setExpandedId] = useState<string>();
   const rows = useMemo(() => {
     const source = record?.students.map(getPaymentRow) || [];
-    const searched = source.filter((student) => `${student.id} ${student.name}`.toLowerCase().includes(query.toLowerCase()));
+    const searched = source.filter((student) => `${student.id} ${student.name} ${student.phone}`.toLowerCase().includes(query.toLowerCase()));
     const filtered = filter === 'paid' ? searched.filter((student) => student.isPaid) : filter === 'unpaid' ? searched.filter((student) => !student.isPaid) : searched;
     return [...filtered].sort((a, b) => filter === 'high' ? b.remainingAmount - a.remainingAmount : a.remainingAmount - b.remainingAmount);
   }, [filter, query, record]);
@@ -244,7 +263,7 @@ function PaymentDashboard({ recordId }: { recordId: string }) {
       <div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-3"><span className="text-xs font-bold uppercase tracking-[.12em] text-muted-foreground">{t('students')}</span><span data-testid="text-dashboard-count" className="mono text-[10px] font-bold text-primary">{rows.length} / {record.students.length}</span></div>
       {rows.length ? rows.map((student) => <div key={student.id} data-testid={`payment-row-${student.id}`} className={`border-b border-border/70 px-4 py-4 last:border-0 transition ${student.isPaid ? 'bg-muted/35' : 'hover:bg-secondary/20'}`}>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="min-w-0"><p className={`truncate text-sm font-bold ${student.isPaid ? 'text-muted-foreground line-through' : ''}`}>{student.name}</p><p className="mono mt-1 text-[10px] text-muted-foreground">{student.id} · {student.level}</p></div>
+           <div className="flex min-w-0 items-center gap-1"><div className="min-w-0"><p className={`truncate text-sm font-bold ${student.isPaid ? 'text-muted-foreground line-through' : ''}`}>{student.name}</p><p className="mono mt-1 text-[10px] text-muted-foreground">{student.id} · {student.phone} · {student.level}</p></div><WhatsAppLink studentId={student.id} studentName={student.name} phone={student.phone} /></div>
            <div className="flex flex-wrap items-center gap-2 sm:justify-end"><div className="text-left sm:text-right"><span className="block text-[10px] uppercase tracking-[.12em] text-muted-foreground">{t('remaining')}</span><span data-testid={`text-remaining-${student.id}`} className={`text-sm font-bold ${student.isPaid ? 'text-muted-foreground' : 'text-primary'}`}>{currency(student.remainingAmount)}</span></div>{student.isPaid ? <span className="inline-flex items-center gap-1 rounded-lg bg-secondary px-2.5 py-2 text-xs font-bold text-muted-foreground"><CircleCheck size={15} />{t('paidStatus')}</span> : <><button data-testid={`button-payment-${student.id}`} onClick={() => { setPaymentId(student.id); setConfirmAllId(undefined); setPaymentValue(''); setPaymentError(''); }} className="focus-ring inline-flex min-h-10 items-center gap-1.5 rounded-lg bg-primary px-3 text-xs font-bold text-primary-foreground transition hover:-translate-y-px"><CirclePlus size={15} />{t('payment')}</button><button data-testid={`button-pay-all-${student.id}`} aria-label={confirmAllId === student.id ? t('confirm') : t('payAll')} onClick={() => confirmAllId === student.id ? payAll(student.id) : setConfirmAllId(student.id)} className={`focus-ring inline-flex min-h-10 items-center gap-1.5 rounded-lg px-3 text-xs font-bold transition hover:-translate-y-px ${confirmAllId === student.id ? 'bg-primary text-primary-foreground' : 'border border-border bg-card text-muted-foreground hover:bg-secondary hover:text-primary'}`}>{confirmAllId === student.id ? <><Check size={15} />{t('confirm')}</> : <><Check size={15} />{t('payAll')}</>}</button></>}{student.paymentHistory.length > 0 && <button data-testid={`button-history-${student.id}`} onClick={() => setExpandedId(expandedId === student.id ? undefined : student.id)} className="focus-ring inline-flex min-h-10 items-center gap-1 rounded-lg border border-border px-3 text-xs font-bold text-muted-foreground transition hover:bg-muted hover:text-foreground">{expandedId === student.id ? <ChevronUp size={14} /> : <ChevronDown size={14} />}{t('history')}</button>}</div>
         </div>
          {confirmAllId === student.id && !student.isPaid && <p data-testid={`text-confirm-pay-all-${student.id}`} className="mt-3 rounded-lg bg-secondary px-3 py-2 text-xs font-semibold text-muted-foreground">{t('confirmPayRemaining')} · {currency(student.remainingAmount)}</p>}
@@ -267,7 +286,7 @@ function NameStep({ initial, onNext }: { initial?: string; onNext: (name: string
 function StudentsStep({ selected, onBack, onNext }: { selected?: string[]; onBack: () => void; onNext: (ids: string[]) => void }) {
   const { t } = useLanguage();
   const [query, setQuery] = useState(''); const [mode, setMode] = useState<'all' | 'custom' | 'tsaniy' | 'awwal'>(selected?.length === students.length ? 'all' : 'custom'); const [ids, setIds] = useState<string[]>(selected || []);
-  const filtered = useMemo(() => students.filter((s) => `${s.id} ${s.name}`.toLowerCase().includes(query.toLowerCase()) && (mode === 'all' || mode === 'custom' || s.level.toLowerCase() === mode)), [mode, query]);
+  const filtered = useMemo(() => students.filter((s) => `${s.id} ${s.name} ${s.phone}`.toLowerCase().includes(query.toLowerCase()) && (mode === 'all' || mode === 'custom' || s.level.toLowerCase() === mode)), [mode, query]);
   const allShownSelected = filtered.length > 0 && filtered.every((s) => ids.includes(s.id));
   const toggleAll = () => setIds(allShownSelected ? ids.filter((id) => !filtered.some((s) => s.id === id)) : [...new Set([...ids, ...filtered.map((s) => s.id)])]);
   const toggleMode = (next: 'all' | 'custom' | 'tsaniy' | 'awwal') => { setMode(next); if (next === 'all') setIds(students.map((s) => s.id)); else if (next === 'tsaniy' || next === 'awwal') setIds(students.filter((s) => s.level.toLowerCase() === next).map((s) => s.id)); };
@@ -275,7 +294,7 @@ function StudentsStep({ selected, onBack, onNext }: { selected?: string[]; onBac
     <div><p className="mono mb-3 text-[10px] uppercase tracking-[.2em] text-primary">{t('stepLabel')} 02 / 04</p><h1 className="text-3xl font-bold tracking-[-.05em] sm:text-4xl">{t('chooseStudentsTitle')}</h1><p className="mt-3 text-sm text-muted-foreground">{t('chooseStudentsDescription')}</p>
       <div className="mt-9 grid grid-cols-4 rounded-xl border border-border bg-muted p-1"><button data-testid="button-mode-all" onClick={() => toggleMode('all')} className={`rounded-lg px-1 py-2.5 text-xs font-bold transition sm:text-sm ${mode === 'all' ? 'bg-card text-primary shadow-sm' : 'text-muted-foreground'}`}>{t('all')} <span className="mono ml-1 text-[10px]">30</span></button><button data-testid="button-mode-custom" onClick={() => toggleMode('custom')} className={`rounded-lg px-1 py-2.5 text-xs font-bold transition sm:text-sm ${mode === 'custom' ? 'bg-card text-primary shadow-sm' : 'text-muted-foreground'}`}>{t('chooseOwn')}</button><button data-testid="button-mode-tsaniy" onClick={() => toggleMode('tsaniy')} className={`rounded-lg px-1 py-2.5 text-xs font-bold transition sm:text-sm ${mode === 'tsaniy' ? 'bg-card text-primary shadow-sm' : 'text-muted-foreground'}`}>Tsaniy</button><button data-testid="button-mode-awwal" onClick={() => toggleMode('awwal')} className={`rounded-lg px-1 py-2.5 text-xs font-bold transition sm:text-sm ${mode === 'awwal' ? 'bg-card text-primary shadow-sm' : 'text-muted-foreground'}`}>Awwal</button></div>
       <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><div className="relative flex-1"><Search className="absolute left-3 top-3.5 text-muted-foreground" size={16} /><input data-testid="input-student-search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t('searchStudent')} className="focus-ring h-11 w-full rounded-xl border border-border bg-card pl-10 pr-4 text-sm outline-none focus:border-primary" /></div><span data-testid="text-selected-count" className="mono text-xs font-bold text-primary">{ids.length} / 30 {t('selected')}</span></div>
-      <div className="mt-4 overflow-hidden rounded-2xl border border-border bg-card"><div className="flex items-center gap-3 border-b border-border bg-muted/50 px-4 py-3"><input type="checkbox" data-testid="checkbox-select-all" checked={allShownSelected} onChange={toggleAll} className="size-4 accent-[hsl(var(--primary))]" /><span className="text-xs font-bold text-muted-foreground">{allShownSelected ? t('deselectAll') : t('selectAll')}{query && ` · ${filtered.length}`}</span></div><div className="scroll-thin max-h-[390px] overflow-y-auto">{filtered.length ? filtered.map((s, i) => <label key={s.id} data-testid={`row-student-${s.id}`} className="row-in flex cursor-pointer items-center gap-3 border-b border-border/70 px-4 py-3.5 last:border-0 hover:bg-secondary/45" style={{ animationDelay: `${i * 18}ms` }}><input type="checkbox" data-testid={`checkbox-student-${s.id}`} checked={ids.includes(s.id)} onChange={() => setIds(ids.includes(s.id) ? ids.filter((id) => id !== s.id) : [...ids, s.id])} className="size-4 accent-[hsl(var(--primary))]" /><span className="min-w-0 flex-1"><span className="block truncate text-sm font-bold">{s.name}</span><span className="mono mt-0.5 block text-[10px] text-muted-foreground">{s.id}</span></span><span className="rounded-md bg-secondary px-2 py-1 text-[10px] font-bold text-primary">{s.level}</span></label>) : <div className="px-5 py-12 text-center text-sm text-muted-foreground">{t('noStudents')}</div>}</div></div>
+      <div className="mt-4 overflow-hidden rounded-2xl border border-border bg-card"><div className="flex items-center gap-3 border-b border-border bg-muted/50 px-4 py-3"><input type="checkbox" data-testid="checkbox-select-all" checked={allShownSelected} onChange={toggleAll} className="size-4 accent-[hsl(var(--primary))]" /><span className="text-xs font-bold text-muted-foreground">{allShownSelected ? t('deselectAll') : t('selectAll')}{query && ` · ${filtered.length}`}</span></div><div className="scroll-thin max-h-[390px] overflow-y-auto">{filtered.length ? filtered.map((s, i) => <label key={s.id} data-testid={`row-student-${s.id}`} className="row-in flex cursor-pointer items-center gap-3 border-b border-border/70 px-4 py-3.5 last:border-0 hover:bg-secondary/45" style={{ animationDelay: `${i * 18}ms` }}><input type="checkbox" data-testid={`checkbox-student-${s.id}`} checked={ids.includes(s.id)} onChange={() => setIds(ids.includes(s.id) ? ids.filter((id) => id !== s.id) : [...ids, s.id])} className="size-4 accent-[hsl(var(--primary))]" /><span className="min-w-0 flex-1"><span className="block truncate text-sm font-bold">{s.name}</span><span className="mono mt-0.5 block text-[10px] text-muted-foreground">{s.id} · {s.phone}</span></span><WhatsAppLink studentId={s.id} studentName={s.name} phone={s.phone} /><span className="rounded-md bg-secondary px-2 py-1 text-[10px] font-bold text-primary">{s.level}</span></label>) : <div className="px-5 py-12 text-center text-sm text-muted-foreground">{t('noStudents')}</div>}</div></div>
       {!ids.length && <p className="mt-3 text-xs font-semibold text-destructive" data-testid="status-no-selection">{t('noSelection')}</p>}
     </div>
   </StepLayout>;
@@ -292,7 +311,7 @@ function PricingStep({ chosen, initial, onBack, onNext }: { chosen: Student[]; i
     <div><p className="mono mb-3 text-[10px] uppercase tracking-[.2em] text-primary">{t('stepLabel')} 03 / 04</p><h1 className="text-3xl font-bold tracking-[-.05em] sm:text-4xl">{t('setPriceTitle')}</h1><p className="mt-3 text-sm text-muted-foreground">{t('setPriceDescription')}</p>
       <div className="mt-9 grid grid-cols-2 rounded-xl border border-border bg-muted p-1"><button data-testid="button-price-all" onClick={() => setMode('all')} className={`rounded-lg px-2 py-2.5 text-xs font-bold transition sm:text-sm ${mode === 'all' ? 'bg-card text-primary shadow-sm' : 'text-muted-foreground'}`}>{t('onePrice')}</button><button data-testid="button-price-custom" onClick={() => { setMode('custom'); setPrices((p) => Object.fromEntries(chosen.map((s) => [s.id, p[s.id] || allPrice]))) }} className={`rounded-lg px-2 py-2.5 text-xs font-bold transition sm:text-sm ${mode === 'custom' ? 'bg-card text-primary shadow-sm' : 'text-muted-foreground'}`}>{t('differentPrices')}</button></div>
       {mode === 'all' && <label className="mt-5 block max-w-sm"><span className="mb-2 block text-xs font-bold uppercase tracking-[.14em] text-muted-foreground">{t('pricePerStudent')}</span><div className="relative"><span className="absolute left-4 top-3 text-sm font-bold text-muted-foreground">Rp</span><input autoFocus data-testid="input-price-all" inputMode="numeric" value={displayPrice(allPrice)} onChange={(e) => setForAll(e.target.value)} placeholder="0" className="focus-ring h-12 w-full rounded-xl border border-border bg-card pl-11 pr-4 text-right font-bold outline-none focus:border-primary" /></div></label>}
-      <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-card"><div className="grid grid-cols-[1fr_74px_125px] gap-2 border-b border-border bg-muted/50 px-4 py-3 text-[10px] font-bold uppercase tracking-[.12em] text-muted-foreground"><span>Siswa</span><span>Level</span><span className="text-right">Harga</span></div><div className="scroll-thin max-h-[380px] overflow-y-auto">{chosen.map((s) => <div key={s.id} data-testid={`row-price-${s.id}`} className="grid grid-cols-[1fr_74px_125px] items-center gap-2 border-b border-border/70 px-4 py-3 last:border-0"><span className="min-w-0"><span className="block truncate text-sm font-bold">{s.name}</span><span className="mono block text-[9px] text-muted-foreground">{s.id}</span></span><span className="text-xs font-bold text-muted-foreground">{s.level}</span><div className="relative"><span className="absolute left-2.5 top-2.5 text-[11px] font-bold text-muted-foreground">Rp</span><input data-testid={`input-price-${s.id}`} disabled={mode === 'all'} inputMode="numeric" value={displayPrice(mode === 'all' ? allPrice : prices[s.id] || '')} onChange={(e) => update(s.id, e.target.value)} placeholder="0" className="focus-ring h-9 w-full rounded-lg border border-border bg-background pl-8 pr-2 text-right text-xs font-bold outline-none focus:border-primary disabled:opacity-60" /></div></div>)}</div></div>
+      <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-card"><div className="grid grid-cols-[1fr_74px_125px] gap-2 border-b border-border bg-muted/50 px-4 py-3 text-[10px] font-bold uppercase tracking-[.12em] text-muted-foreground"><span>Siswa</span><span>Level</span><span className="text-right">Harga</span></div><div className="scroll-thin max-h-[380px] overflow-y-auto">{chosen.map((s) => <div key={s.id} data-testid={`row-price-${s.id}`} className="grid grid-cols-[1fr_74px_125px] items-center gap-2 border-b border-border/70 px-4 py-3 last:border-0"><span className="flex min-w-0 items-center gap-1"><span className="min-w-0"><span className="block truncate text-sm font-bold">{s.name}</span><span className="mono block text-[9px] text-muted-foreground">{s.id}</span></span><WhatsAppLink studentId={s.id} studentName={s.name} phone={s.phone} /></span><span className="text-xs font-bold text-muted-foreground">{s.level}</span><div className="relative"><span className="absolute left-2.5 top-2.5 text-[11px] font-bold text-muted-foreground">Rp</span><input data-testid={`input-price-${s.id}`} disabled={mode === 'all'} inputMode="numeric" value={displayPrice(mode === 'all' ? allPrice : prices[s.id] || '')} onChange={(e) => update(s.id, e.target.value)} placeholder="0" className="focus-ring h-9 w-full rounded-lg border border-border bg-background pl-8 pr-2 text-right text-xs font-bold outline-none focus:border-primary disabled:opacity-60" /></div></div>)}</div></div>
     </div>
   </StepLayout>;
 }
@@ -303,7 +322,7 @@ function ReviewStep({ name, items, editingId, onBack, onSave }: { name: string; 
   return <StepLayout step="review" footer={<><Button testId="button-back-review" variant="quiet" onClick={onBack}><ArrowLeft size={16} />{t('cancel')}</Button><Button testId="button-save-record" onClick={onSave}><Check size={16} />{editingId ? t('saveChanges') : t('saveRecord')}</Button></>}>
     <div><p className="mono mb-3 text-[10px] uppercase tracking-[.2em] text-primary">{t('stepLabel')} 04 / 04</p><h1 className="text-3xl font-bold tracking-[-.05em] sm:text-4xl">{t('inspectTitle')}</h1><p className="mt-3 text-sm text-muted-foreground">{t('inspectDescription')}</p>
       <div className="mt-9 grid gap-3 sm:grid-cols-[1fr_170px]"><div className="rounded-2xl border border-border bg-card p-5"><span className="mono text-[10px] uppercase tracking-[.16em] text-muted-foreground">{t('recordNameLabel')}</span><p data-testid="text-review-name" className="mt-2 text-lg font-bold">{name}</p></div><div className="rounded-2xl bg-primary p-5 text-primary-foreground"><span className="mono text-[10px] uppercase tracking-[.16em] opacity-70">{t('total')}</span><p data-testid="text-review-total" className="mt-2 text-xl font-bold tracking-[-.04em]">{currency(total)}</p><p className="mt-1 text-xs opacity-70">{items.length} {t('students').toLowerCase()}</p></div></div>
-      <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-card"><div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-3"><span className="text-xs font-bold uppercase tracking-[.12em] text-muted-foreground">{t('recordDetails')}</span><span data-testid="text-review-count" className="mono text-[10px] font-bold text-primary">{items.length} {t('students').toLowerCase()}</span></div>{items.map((s) => <div key={s.id} data-testid={`review-row-${s.id}`} className="grid grid-cols-[1fr_auto] items-center gap-3 border-b border-border/70 px-4 py-3.5 last:border-0"><span className="min-w-0"><span className="block truncate text-sm font-bold">{s.name}</span><span className="mono mt-0.5 block text-[10px] text-muted-foreground">{s.id} · {s.level}</span></span><span className="text-sm font-bold">{currency(s.price)}</span></div>)}</div>
+      <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-card"><div className="flex items-center justify-between border-b border-border bg-muted/50 px-4 py-3"><span className="text-xs font-bold uppercase tracking-[.12em] text-muted-foreground">{t('recordDetails')}</span><span data-testid="text-review-count" className="mono text-[10px] font-bold text-primary">{items.length} {t('students').toLowerCase()}</span></div>{items.map((s) => <div key={s.id} data-testid={`review-row-${s.id}`} className="grid grid-cols-[1fr_auto] items-center gap-3 border-b border-border/70 px-4 py-3.5 last:border-0"><span className="flex min-w-0 items-center gap-1"><span className="min-w-0"><span className="block truncate text-sm font-bold">{s.name}</span><span className="mono mt-0.5 block text-[10px] text-muted-foreground">{s.id} · {s.phone} · {s.level}</span></span><WhatsAppLink studentId={s.id} studentName={s.name} phone={s.phone} /></span><span className="text-sm font-bold">{currency(s.price)}</span></div>)}</div>
     </div>
   </StepLayout>;
 }
