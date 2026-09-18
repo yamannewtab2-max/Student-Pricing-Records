@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "dev": "pnpm --filter @workspace/student-pricing run dev",
-    "build": "pnpm --filter @workspace/student-pricing run build",
+    "dev": "pnpm --parallel --filter @workspace/student-pricing --filter @workspace/api-server run dev",
+    "build": "pnpm --filter @workspace/student-pricing --filter @workspace/api-server run build",
+    "start": "node artifacts/api-server/dist/index.mjs",
     "typecheck": "pnpm -r run typecheck",
     "lint": "pnpm -r run typecheck"
   },
