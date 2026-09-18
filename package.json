@@ -2,16 +2,11 @@
   "name": "workspace",
   "version": "0.0.0",
   "license": "MIT",
-  "workspaces": [
-    "artifacts/*",
-    "lib/*",
-    "scripts"
-  ],
   "scripts": {
-    "dev": "npm run dev --workspace=@workspace/student-pricing",
-    "build": "npm run build --workspace=@workspace/student-pricing",
-    "typecheck": "npm run typecheck --workspace=@workspace/student-pricing",
-    "lint": "npm run typecheck"
+    "dev": "pnpm --filter @workspace/student-pricing run dev",
+    "build": "pnpm --filter @workspace/student-pricing run build",
+    "typecheck": "pnpm -r run typecheck",
+    "lint": "pnpm -r run typecheck"
   },
   "private": true,
   "dependencies": {
@@ -20,5 +15,8 @@
   "devDependencies": {
     "prettier": "^3.9.6",
     "typescript": "~5.9.3"
-  }
+  },
+  "onlyBuiltDependencies": [
+    "esbuild"
+  ]
 }

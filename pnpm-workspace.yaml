@@ -1,0 +1,10 @@
+packages:
+  - 'artifacts/*'
+  - 'lib/*'
+  - 'scripts'
+
+overrides:
+  esbuild: '0.28.2'
+
+allowBuilds:
+  esbuild: true
