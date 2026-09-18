@@ -1,0 +1,6 @@
+{
+  "name": "Student Pricing Records",
+  "description": "Student pricing records, payment management, and student group manager.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
