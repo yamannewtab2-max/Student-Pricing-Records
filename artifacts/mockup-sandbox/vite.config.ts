@@ -8,7 +8,7 @@ import { mockupPreviewPlugin } from "./mockupPreviewPlugin";
 const rawPort = process.env.PORT;
 
 if (!rawPort) {
-  throw new Error(
+  console.log(
     "PORT environment variable is required but was not provided.",
   );
 }
@@ -16,13 +16,13 @@ if (!rawPort) {
 const port = Number(rawPort);
 
 if (Number.isNaN(port) || port <= 0) {
-  throw new Error(`Invalid PORT value: "${rawPort}"`);
+  console.log(`Invalid PORT value: "${rawPort}"`);
 }
 
-const basePath = process.env.BASE_PATH;
+const basePath = process.env.BASE_PATH || "/";
 
 if (!basePath) {
-  throw new Error(
+  console.log(
     "BASE_PATH environment variable is required but was not provided.",
   );
 }

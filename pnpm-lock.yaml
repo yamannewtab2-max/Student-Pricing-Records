@@ -14,6 +14,12 @@ importers:
       '@replit/connectors-sdk':
         specifier: ^0.4.3
         version: 0.4.3
+      '@replit/vite-plugin-cartographer':
+        specifier: ^0.6.1
+        version: 0.6.1
+      '@replit/vite-plugin-runtime-error-modal':
+        specifier: ^0.0.6
+        version: 0.0.6
     devDependencies:
       prettier:
         specifier: ^3.9.6
@@ -1529,6 +1535,12 @@ packages:
   '@replit/connectors-sdk@0.4.3':
     resolution: {integrity: sha512-7XoaRty/O6JF161UkVBI8UewZ96XCNNN1kRvT9Q41IRH3xr+6ImylvXtirIghydDd2FCQvIkY4HQscOOr45otA==}
 
+  '@replit/vite-plugin-cartographer@0.6.1':
+    resolution: {integrity: sha512-t1TBE22lctrkKBB60b8K6D0BA4teO/mw9++VMEyRw2ASNZZ0Nbgmjw+ftybrl1H66mg3tSNsx204QbbeAjMsfA==}
+
+  '@replit/vite-plugin-runtime-error-modal@0.0.6':
+    resolution: {integrity: sha512-53iuzLsrvcUnWxAo0fvNrUhOf7LYJ+3at61dZeTIrkaZD4vGNjTbvE0j50TFcjjTC9UM74uprlnQ4+L2A//Cjg==}
+
   '@rolldown/pluginutils@1.0.0-rc.3':
     resolution: {integrity: sha512-eybk3TjzzzV97Dlj5c+XrBFW57eTNhzod66y9HrBlzJ6NsCrWCp/2kaPS3K9wJmurBC0Tdw4yPjXKZqlznim3Q==}
 
@@ -2748,6 +2760,9 @@ packages:
 
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
+
+  modern-screenshot@4.7.0:
+    resolution: {integrity: sha512-9YxN+ddPSMMlhylOv25VHzXrl9u67QRxoh7+SEewGtgUw7t6hHTrjptSDJUSne9oG4Xk/h2cwG15nIt4Hc9ujg==}
 
   motion-dom@12.43.0:
     resolution: {integrity: sha512-azKON4d9S65PEoFUiQTMTgPheEmzf2QngdRc50AKfJp9Q9mmcBVw22c8eMq9k8kxOFHdL7+WZY7N/5F/lwiDag==}
@@ -4502,6 +4517,20 @@ snapshots:
 
   '@replit/connectors-sdk@0.4.3': {}
 
+  '@replit/vite-plugin-cartographer@0.6.1':
+    dependencies:
+      '@babel/parser': 7.29.8
+      '@babel/traverse': 7.29.8
+      '@babel/types': 7.29.8
+      magic-string: 0.30.21
+      modern-screenshot: 4.7.0
+    transitivePeerDependencies:
+      - supports-color
+
+  '@replit/vite-plugin-runtime-error-modal@0.0.6':
+    dependencies:
+      '@jridgewell/trace-mapping': 0.3.31
+
   '@rolldown/pluginutils@1.0.0-rc.3': {}
 
   '@rollup/rollup-android-arm-eabi@4.63.3':
@@ -5518,6 +5547,8 @@ snapshots:
       brace-expansion: 5.0.12
 
   minimist@1.2.8: {}
+
+  modern-screenshot@4.7.0: {}
 
   motion-dom@12.43.0:
     dependencies:
